@@ -1,0 +1,239 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!-- saved from url=(0060)http://arco.esi.uclm.es/~david.villa/doc/repo/make/make.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=windows-1252"><title>GNU Make</title><meta name="GENERATOR" content="Modular DocBook HTML Stylesheet Version 1.79"></head><body class="ARTICLE" bgcolor="#FFFFFF" text="#000000" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="ARTICLE"><div class="TITLEPAGE"><h1 class="TITLE"><a name="AEN2">GNU Make</a></h1><h3 class="AUTHOR"><a name="AEN4">ARCO</a></h3><div class="REVHISTORY"><table width="100%" border="0"><tbody><tr><th align="LEFT" valign="TOP" colspan="3"><b>Revision History</b></th></tr><tr><td align="LEFT">Revision 1.1</td><td align="LEFT">12 / 09 / 2002</td><td align="LEFT">Revised by: David Villa</td></tr><tr><td align="LEFT" colspan="3">Formateado como DocBook.</td></tr><tr><td align="LEFT">Revision 1.0</td><td align="LEFT">10 / 03 / 2000</td><td align="LEFT">Revised by: David Villa</td></tr><tr><td align="LEFT" colspan="3">Inicial.</td></tr></tbody></table></div><div><div class="ABSTRACT"><p></p><a name="AEN6"></a><p> 
+	Guia básica para el uso de GNU make.
+      </p><p></p></div></div><hr></div><div class="TOC"><dl><dt><b>Table of Contents</b></dt><dt>1. <a href="http://arco.esi.uclm.es/~david.villa/doc/repo/make/make.html#INTRO">Introducción</a></dt><dt>2. <a href="http://arco.esi.uclm.es/~david.villa/doc/repo/make/make.html#MAKEFILES">Makefiles</a></dt><dd><dl><dt>2.1. <a href="http://arco.esi.uclm.es/~david.villa/doc/repo/make/make.html#AEN29">Comentarios</a></dt><dt>2.2. <a href="http://arco.esi.uclm.es/~david.villa/doc/repo/make/make.html#AEN32">Información al usuario</a></dt><dt>2.3. <a href="http://arco.esi.uclm.es/~david.villa/doc/repo/make/make.html#AEN36">Variables</a></dt><dt>2.4. <a href="http://arco.esi.uclm.es/~david.villa/doc/repo/make/make.html#AEN113">Reglas</a></dt></dl></dd><dt>3. <a href="http://arco.esi.uclm.es/~david.villa/doc/repo/make/make.html#ABREV">Variables automáticas</a></dt><dt>4. <a href="http://arco.esi.uclm.es/~david.villa/doc/repo/make/make.html#IMPL">Reglas implícitas</a></dt><dt>5. <a href="http://arco.esi.uclm.es/~david.villa/doc/repo/make/make.html#JERAR">Makefiles jerárquicos</a></dt><dt>6. <a href="http://arco.esi.uclm.es/~david.villa/doc/repo/make/make.html#OPT">Opciones</a></dt><dt>7. <a href="http://arco.esi.uclm.es/~david.villa/doc/repo/make/make.html#LINKS">Enlaces</a></dt><dt><a href="http://arco.esi.uclm.es/~david.villa/doc/repo/make/make.html#REFS">Referencias</a></dt></dl></div><div class="SECTION"><h2 class="SECTION"><a name="INTRO">1. Introducción</a></h2><p>      <span class="emphasis"><i class="EMPHASIS">Make</i></span> es una utilidad que permite definir
+    reglas de dependencia entre ficheros. Aunque puede utilizarse para
+    diferentes fines, está especialmente orientado a la compilación de
+    código.
+    </p><p>      El propósito de make es determinar automáticamente qué piezas de
+      un programa necesitan ser recompiladas y lanzar las órdenes
+      necesarias para lograrlo.
+    </p></div><div class="SECTION"><hr><h2 class="SECTION"><a name="MAKEFILES">2. Makefiles</a></h2><p>      Para utilizar <span class="emphasis"><i class="EMPHASIS">make</i></span> debe escribirse
+      normalmente un fichero llamado GNUmakefile, makefile o Makefile
+      (se aconseja esta última forma) que describe las relaciones de
+      dependencia de los ficheros que forman un programa. En un
+      programa normalmente el fichero ejecutable se genera a partir de
+      ficheros objeto, los cuales a su vez se construyen mediante la
+      compilación de los ficheros fuente. El fichero
+      <span class="emphasis"><i class="EMPHASIS">makefile</i></span> contiene esencialmente variables y
+      reglas.
+    </p><div class="SECTION"><hr><h3 class="SECTION"><a name="AEN29">2.1. Comentarios</a></h3><p>	Para escribir comentarios debe insertarse el carácter # al
+      comienzo del texto en cuestión. Se pueden añadir al final de una
+      lista de dependencias o de una orden. Si aparecen solos en una
+      línea, deben comenzar en la primera columna.
+      </p></div><div class="SECTION"><hr><h3 class="SECTION"><a name="AEN32">2.2. Información al usuario</a></h3><p>	Es posible imprimir texto en la consola como complemento de
+      información para el usuario. Para ello se utiliza la orden
+      <span class="emphasis"><i class="EMPHASIS">echo</i></span>. Esta orden debe utilizarse en una
+      regla como cualquier otra orden </p></div><div class="SECTION"><hr><h3 class="SECTION"><a name="AEN36">2.3. Variables</a></h3><p>	Una variable  es un nombre simbólico que será substituido por
+	su valor en el momento de la aplicación de las reglas
+	posteriores. Para definir una variable se utiliza la siguiente
+	sintaxis:
+      </p><p>	<tt class="LITERAL">	  &lt;IDENTIFICADOR&gt;=valor
+	</tt>
+      </p><p>	Un ejemplo:
+      </p><p>	<tt class="LITERAL">NOMBRE_PROGRAMA = uniq</tt>
+      </p><p>	Por convenio las variables tienen identificadores con todas las
+	letras en mayúscula. Para <span class="QUOTE">"expandir"</span> una
+	variable, es decir, para obtener su valor se utiliza la
+	siguiente sintaxis:
+      </p><p>	<tt class="LITERAL">	  $(IDENTIFICADOR)
+	</tt>
+      </p><p>	<span class="emphasis"><i class="EMPHASIS">Make</i></span> define algunas variables que es
+	necesario conocer y que ya contienen valores por defecto.
+	Algunas de ellas son:
+      </p><p></p><div class="VARIABLELIST"><p><b></b></p><dl><dt><tt class="LITERAL"><b class="COMMAND">AR</b></tt></dt><dd><p>	      Programa de empaquetado. Por defecto es <samp class="PROMPT">ar</samp>.
+	    </p></dd><dt><tt class="LITERAL"><b class="COMMAND">CC</b></tt></dt><dd><p>	      Compilador de C. Por defecto es <samp class="PROMPT">cc</samp>.
+	    </p></dd><dt><tt class="LITERAL"><b class="COMMAND">CXX</b></tt></dt><dd><p>	      Compilador de C++. Por defecto es <samp class="PROMPT">g++</samp>.
+	    </p></dd><dt><tt class="LITERAL"><b class="COMMAND">CPP</b></tt></dt><dd><p>	      Preprocesador de C.
+	    </p></dd><dt><tt class="LITERAL"><b class="COMMAND">CFLAGS</b></tt></dt><dd><p>	      Opciones de compilación C.
+	    </p></dd><dt><tt class="LITERAL"><b class="COMMAND">CXXFLAGS</b></tt></dt><dd><p>	      Opciones de compilación C++.
+	    </p></dd><dt><tt class="LITERAL"><b class="COMMAND">CPPFLAGS</b></tt></dt><dd><p>	      Opciones para el preprocesador.
+	    </p></dd><dt><tt class="LITERAL"><b class="COMMAND">LDFLAGS</b></tt></dt><dd><p>	      Opciones para el montador (enlazador).
+	    </p></dd><dt><tt class="LITERAL"><b class="COMMAND">LDLIBS</b></tt></dt><dd><p>	      Librerías a utilizar en el montaje.
+	    </p></dd></dl></div><p>	El valor de estas variables puede modificarse en el propio
+	archivo <span class="emphasis"><i class="EMPHASIS">makefile</i></span> como se verá en los
+	ejemplos, pero también pueden darse valores por línea de
+	comandos:
+      </p><p>	</p><pre class="PROGRAMLISTING"> $ make CFLAGS=-g
+	</pre>
+      <p></p></div><div class="SECTION"><hr><h3 class="SECTION"><a name="AEN113">2.4. Reglas</a></h3><p>	La sintaxis de una regla es:
+      </p><p>	
+	</p><pre class="PROGRAMLISTING">	
+&lt;objetivo&gt;: &lt;requisitos&gt;
+             &lt;orden para generar objetivo a partir de requisitos&gt;
+	</pre>
+      <p></p><p>	Tanto &lt;objetivo&gt; como &lt;requisitos&gt; suelen ser nombres de
+	ficheros. Cuando <span class="emphasis"><i class="EMPHASIS">make</i></span> evalúa una regla
+	debe poder ejecutar la orden asociada para generar el objetivo
+	a partir de los requisitos. Si falta alguno de los archivos
+	requisito, <span class="emphasis"><i class="EMPHASIS">make</i></span> buscará una regla que le
+	permita saber cómo generarlo; si no existe tal regla terminará
+	informando del error.
+      </p><p>	El nombre del objetivo debe comenzar en la primera columna y
+	debe estar seguido del carácter dos puntos (:) y al menos un
+	espacio. A continuación se enumeran los ficheros requeridos
+	(llamados dependencias).
+      </p><p>	En la siguiente línea se describe la orden que ha de generar
+	el objetivo. Dicha línea debe comenzar obligatoriamente con un
+	carácter TABULACIÓN, en caso contrario
+	<span class="emphasis"><i class="EMPHASIS">make</i></span> informará de un error de
+	sintáxis. Cada regla puede contener varias líneas de órdenes
+	que seguirán el mismo formato. Cada regla debe ir separada de
+	la anterior por medio de una línea en blanco y al final del
+	archivo también debe aparecer una línea vacía.
+      </p><p>	Veamos un ejemplo de <span class="emphasis"><i class="EMPHASIS">makefile</i></span>:
+      </p><p>	</p><pre class="PROGRAMLISTING"> CC=gcc
+ CFLAGS=-Wall -g
+
+ hola: hola.o auxhola.o
+       $(CC) -o hola hola.o auxhola.o
+
+ hola.o: hola.c
+       $(CC) $(CFLAGS) -c -o hola.o hola.c
+
+ auxhola.o: auxhola.c
+       $(CC) $(CFLAGS) -c -o auxhola.o auxhola.c
+
+ clean:
+       $(RM) *.o hola core
+	</pre>
+      <p></p><p>	En el ejemplo se pretende construir la aplicación
+	<span class="emphasis"><i class="EMPHASIS">hola</i></span> que consta de los módulos
+	<span class="emphasis"><i class="EMPHASIS">hola.o</i></span> y
+	<span class="emphasis"><i class="EMPHASIS">auxhola.o</i></span>. Cuando se ejecuta sin
+	parámetros, <span class="emphasis"><i class="EMPHASIS">make</i></span> siempre empieza
+	evaluando la primera regla que aparece en el fichero, en este
+	caso la regla <span class="emphasis"><i class="EMPHASIS">hola</i></span>.
+      </p><p>	Si alguno de los dos fichero objeto no está en el directorio,
+	make ejecutará la regla correspondiente que permite generarlo.
+      </p><p>	Una característica muy importante de <span class="emphasis"><i class="EMPHASIS">make</i></span>
+	es que antes de ejecutar una regla comprueba que realmente sea
+	necesario. Por medio de las marcas de tiempo que el sistema
+	operativo almacena en los descriptores de fichero,
+	<span class="emphasis"><i class="EMPHASIS">make</i></span> averigua que órdenes necesita
+	ejecutar. Siempre que el fichero objetivo tenga una fecha más
+	reciente que cualquiera de los ficheros requisito, la regla se
+	evaluará pero no se ejecuta la orden.
+	Esto permite que cuando trabajamos con grandes proyectos
+	formados por muchos módulos ahorremos mucho tiempo ya que
+	<span class="emphasis"><i class="EMPHASIS">make</i></span> sólo recompila los ficheros
+	necesarios para obtener la versión actualizada del ejecutable.
+      </p><p>	En el ejemplo aparece una regla adicional llamada
+	<span class="emphasis"><i class="EMPHASIS">clean</i></span>; esta regla elimina todos los
+	ficheros objeto y binarios dejando sólo los fuentes. Por
+	convenio se la suele denominar <span class="emphasis"><i class="EMPHASIS">clean</i></span>
+	aunque no es obligatorio. También suele definirse una regla
+	<span class="emphasis"><i class="EMPHASIS">all</i></span> que provoca que se evaluen todas las
+	demás reglas de construcción. Para ejecutar una regla en
+	concreto debe indicarsele a <span class="emphasis"><i class="EMPHASIS">make</i></span> del
+	siguiente modo.
+      </p><p>	
+	</p><pre class="PROGRAMLISTING"> $ make clean
+	</pre>
+      <p></p></div></div><div class="SECTION"><hr><h2 class="SECTION"><a name="ABREV">3. Variables automáticas</a></h2><p>      Se pueden utilizar algunos indicadores especiales que permiten
+      hacer ficheros <span class="emphasis"><i class="EMPHASIS">makefile</i></span> más simples:
+    </p><div class="TABLE"><a name="AEN150"></a><p><b>Table 1. </b></p><table border="0" frame="void" class="CALSTABLE"><colgroup><col width="38"><col></colgroup><tbody><tr><td><tt class="LITERAL"><b class="COMMAND">$@</b></tt></td><td>Es el objetivo de la regla en la que aparece.</td></tr><tr><td>&nbsp;</td><td>&nbsp;</td></tr><tr><td><tt class="LITERAL"><b class="COMMAND">$^</b></tt></td><td>En la lista de requisitos de la regla en que aparece.</td></tr><tr><td>&nbsp;</td><td>&nbsp;</td></tr><tr><td><tt class="LITERAL"><b class="COMMAND">$?</b></tt></td><td> Es la lista de requisitos más recientes que el objetivo.</td></tr><tr><td>&nbsp;</td><td>&nbsp;</td></tr><tr><td><tt class="LITERAL"><b class="COMMAND">$&lt;</b></tt></td><td>Es el primer requisito de la regla.</td></tr></tbody></table></div><p>      Veamos como aplicarlos al ejemplo anterior:
+    </p><p>	
+      </p><pre class="PROGRAMLISTING"> CC=gcc
+ CFLAGS=-Wall -g
+	
+ hola: hola.o auxhola.o
+       $(CC) -o $@ $^
+
+ hola.o: hola.c
+       $(CC) $(CFLAGS) -c -o $@ $^
+
+ auxhola.o: auxhola.c
+       $(CC) $(CFLAGS) -c -o $@ $^
+
+ clean:
+       $(RM) *.o hola core
+      </pre>
+    <p></p></div><div class="SECTION"><hr><h2 class="SECTION"><a name="IMPL">4. Reglas implícitas</a></h2><p>      <span class="emphasis"><i class="EMPHASIS">Make</i></span> es capaz de averiaguar por si mismo
+      reglas sencillas. Por ejemplo, la regla del tipo:
+    </p><p>      <tt class="LITERAL">	hola.o: hola.c
+      </tt>
+    </p><p>      puede darse por implícita y <span class="emphasis"><i class="EMPHASIS">make</i></span> entenderá
+      que si necesita un fichero <tt class="FILENAME">hola.o</tt> y tiene
+      un fichero <tt class="FILENAME">hola.c</tt> debe compilarlo. De esta
+      forma podemos simplificar el fichero
+      <span class="emphasis"><i class="EMPHASIS">makefile</i></span> anterior, quedando algo como:
+    </p><p>	
+      </p><pre class="PROGRAMLISTING"> CC=gcc
+ CFLAGS=-Wall -g
+
+ hola: hola.o auxhola.o
+
+ clean:
+       $(RM) *.o hola core
+      </pre>
+    <p></p><p>      Aunque las reglas para compilar <span class="emphasis"><i class="EMPHASIS">hola.c</i></span> y
+      <span class="emphasis"><i class="EMPHASIS">auxhola.c</i></span> no aparecen si se ejecutarán en
+      caso necesario y se utilizarán las variables definidas al igual
+      que ocurría en el caso anterior. Es decir, las variables
+      definidas por defecto aún si se modifican se expanden también en
+      las reglas implícitas.
+    </p><p>      Se puede ver además que en este último listado ni siquiera
+      aparece la instrucción para realizar el montaje de los dos
+      ficheros objeto. Esto es porque también se emplea otra regla
+      implícita.
+    </p><p>      De hecho si nuestro programa consta de un único fichero es
+      posible compilarlo con <span class="emphasis"><i class="EMPHASIS">make</i></span> sin siguiera
+      escribir un <span class="emphasis"><i class="EMPHASIS">makefile</i></span>. Para ello debemos
+      indicar a <span class="emphasis"><i class="EMPHASIS">make</i></span> el nombre del ejecutable que
+      deseamos y él buscará un fichero del mismo nombre pero con
+      extensión .c que tomará como fuente del programa. Para compilar
+      y enlazar un fichero <tt class="FILENAME">adios.c</tt> con el fin de
+      obtener un ejecutable <span class="emphasis"><i class="EMPHASIS">adios</i></span> simplemente
+      debemos indicar:
+    </p><p>	
+      </p><pre class="PROGRAMLISTING">	$ make adios
+      </pre>
+    <p></p></div><div class="SECTION"><hr><h2 class="SECTION"><a name="JERAR">5. Makefiles jerárquicos</a></h2><p>      Cuando en la construcción de una aplicación o sistema intervienen
+      varios ejecutables, librerías o módulos resulta mucho más cómodo
+      organizarlos en directorios.
+    </p><p>      Para cada módulo se escribe un <span class="emphasis"><i class="EMPHASIS">makefile</i></span> que
+      se encarga de construir sus objetivos específicos y además se
+      escriben otros <span class="emphasis"><i class="EMPHASIS">makefiles</i></span> en los directorios
+      superiores que construirán objetivos de más alto nivel a partir
+      de los anteriores.
+    </p><p>      Por ello, los módulos de los niveles superiores del árbol de
+      directorios necesitan ejecutar los
+      <span class="emphasis"><i class="EMPHASIS">makefiles</i></span> de los niveles inferiores. Esto
+      se puede hacer con la opción -C que permite que indicando un
+      directorio se procese el <span class="emphasis"><i class="EMPHASIS">makefile</i></span> que se
+      encuentre en él. Veamos un ejemplo:
+    </p><p>	
+      </p><pre class="PROGRAMLISTING"> libs:
+       $(MAKE) -C dir1
+       $(MAKE) -C dir2
+
+ clean:
+       $(RM) *.o
+       $(MAKE) -C dir1 clean
+       $(MAKE) -C dir2 clean
+      </pre>
+    <p></p><p>      El valor de las variables en el fichero
+      <span class="emphasis"><i class="EMPHASIS">makefile</i></span> no se propaga a la ejecución de
+      los <span class="emphasis"><i class="EMPHASIS">makefiles</i></span> que se encuentren en los
+      subdirectorios. La opción -C también puede indicarse desde línea
+      de comandos.
+    </p></div><div class="SECTION"><hr><h2 class="SECTION"><a name="OPT">6. Opciones</a></h2><p>      <span class="emphasis"><i class="EMPHASIS">Make</i></span> acepta varios modificadores por línea
+      de comando relativos a su comportamiento y la visualización de
+      información durante la ejecución.
+    </p><p>      Estos son algunos de ellos:
+    </p><div class="INFORMALTABLE"><p></p><a name="AEN228"></a><table border="0" frame="void" class="CALSTABLE"><colgroup><col width="113"><col></colgroup><tbody><tr><td><tt class="LITERAL">-n</tt></td><td>Imprime las órdenes que
+	    <span class="emphasis"><i class="EMPHASIS">make</i></span> efectúa pero sin ejecutarlas.</td></tr><tr><td>&nbsp;</td><td>&nbsp;</td></tr><tr><td><tt class="LITERAL">-f &lt;fichero&gt;</tt></td><td>Indica a <span class="emphasis"><i class="EMPHASIS">make</i></span>que debe utilizar
+	      <tt class="LITERAL">&lt;Fichero&gt;</tt> como si fuera un
+	    <span class="emphasis"><i class="EMPHASIS">makefile</i></span> aunque tenga otro nombre.</td></tr><tr><td>&nbsp;</td><td>&nbsp;</td></tr><tr><td><tt class="LITERAL">-p</tt></td><td>Imprime las definiciones de macros y las reglas
+	    implícitas
+	    </td></tr><tr><td>&nbsp;</td><td>&nbsp;</td></tr><tr><td><tt class="LITERAL">-C dir</tt></td><td>Cambia al directorio y <tt class="LITERAL">dir</tt>
+	      procesa el <span class="emphasis"><i class="EMPHASIS">makefile</i></span> que allí se encuentre.
+	    </td></tr></tbody></table><p></p></div></div><div class="SECTION"><hr><h2 class="SECTION"><a name="LINKS">7. Enlaces</a></h2><p></p><ul><li style="list-style-type: opencircle"><p>	  <a href="http://www.gnu.org/manual/make-3.79.1/html_chapter/make_toc.html" target="_top">	    Manual en línea de GNU
+	  </a> (inglés)
+	</p></li><li style="list-style-type: disc"><p>	  <a href="http://atenea.udistrital.edu.co/estudiantes/fquimbay/glud-kernel/guias/nivelacion/l03-7.html" target="_top">	    Tutorial de GNU Make
+	  </a> (castellano)
+	</p></li><li style="list-style-type: opencircle"><p>	  <a href="http://www.enterpriseware.net/EWRoot/Files/Make.PDF" target="_top">	    Tutorial sobre <span class="emphasis"><i class="EMPHASIS">cc</i></span> y <span class="emphasis"><i class="EMPHASIS">make</i></span> bajo UNIX
+	  </a>
+	</p></li></ul></div><a name="REFS"></a><hr><h1><a name="REFS"></a>Referencias</h1><div class="BIBLIOENTRY"><a name="AEN276"></a><p>[1]&nbsp;Escuela Superior de Informática, <i>Curso de Aplicaciones de desarrollo en GNU/Linux</i>.</p><div class="BIBLIOENTRYBLOCK" style="margin-left: 0.5in"></div></div><div class="BIBLIOENTRY"><a name="AEN281"></a><p>[2]&nbsp;<i>Página de manual en línea de GNU/Make.</i>.</p><div class="BIBLIOENTRYBLOCK" style="margin-left: 0.5in"></div></div><div class="BIBLIOENTRY"><a name="AEN284"></a><p>[3]&nbsp;<i>Guía de usuario de la Utilidad Make v1.0</i>, <span class="AUTHOR">Eduardo Dominguez</span>, <span class="AUTHOR">Carlos Villarrubia</span>, Escuela Superior de Informática.</p><div class="BIBLIOENTRYBLOCK" style="margin-left: 0.5in"></div></div><div class="BIBLIOENTRY"><a name="AEN295"></a><p>[4]&nbsp;<i>The GNU Make Manual</i>, Free Software Foundation.</p><div class="BIBLIOENTRYBLOCK" style="margin-left: 0.5in"></div></div></div></body></html>
